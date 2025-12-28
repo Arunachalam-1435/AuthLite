@@ -17,10 +17,10 @@ $email = $_POST['mail'];
 $password = hash("md5", $_POST['re-pass']);
 $pgsql = require __DIR__."/db.php";
 $query = "INSERT INTO user_details values('$username', '$email', '$password')";
-$test = $pgsql->exec($query);
-if($test > 0){
-    //header("Location: signup-success.html");
-    echo $username;
+$rows = $pgsql->exec($query);
+if($rows > 0){
+    header("Location: signup-success.html");
+    exit;
 }
 elseif($pgsql->errorCode() == 23505){
      echo "Given email address already taken";

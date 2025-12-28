@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 $path = __DIR__."/config.ini";
 if(file_exists($path)){
     $config = parse_ini_file($path, true);
