@@ -6,12 +6,12 @@
         $psql = require __DIR__."/db.php";
         $query = "SELECT * FROM user_details WHERE email='$mail' and password='$password'";
         $result = $psql->query($query)->fetchAll();
-        $user = $result[0];
+        $user = $result['0'];
         if($user){
             session_start();
             $_SESSION['user_id'] = $user['id'];
             if($_SESSION['user_id'] != 0){
-                header("Location: index.php");
+                header("Location: home.php");
                 exit;
             }
             else{

@@ -6,15 +6,17 @@ if(isset($_SESSION['user_id'])){
     $result = $pgsql->query($query)->fetchAll();
     $user = $result[0];
     if(!isset($user)){
-        echo '<p>User does not exist!</p>
-        <p>Login <a href="login.php">here.</a></p>
+        echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        <p>User does not exist!</p>
+        <p>If you have an account. Login <a href="login.php">here.</a></p>
         <p>If you do not have account Signup <a href="signup.html">here.</a></p>';
         exit;
     }
 }
 else{
-        echo '<p>User does not exist!</p>
-        <p>Login <a href="login.php">here.</a></p>
+        echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        <p>User does not exist!</p>
+        <p>If you have an account. Login <a href="login.php">here.</a></p>
         <p>If you do not have account Signup <a href="signup.html">here.</a></p>';
         exit;
     }
@@ -27,9 +29,13 @@ else{
     <title>Home Page</title>
 </head>
 <body>
+    <img style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid black; object-fit: cover;">
+    <input type="file" accept="image/*">
+    <button onclick="upload()">change my avatar</button>
     <h1>Welcome to home!</h1>
     <h3>Hello <?= $user["name"] ?></h3>
     <p>You are logged in</p>
     <p>You can Logout <a href="logout.php">here</a>
+    <script src="script.js"></script>
 </body>
 </html>
