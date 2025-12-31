@@ -33,7 +33,8 @@
     <title>Login</title>
 </head>
 <body>
-    <h1>Login</h1>
+    <h1>AuthLite</h1>
+    <h3>Login</h3>
     <form method="post">
         <label for="email">Email:</label>
         <input type="email" name="email" id="email">
@@ -41,5 +42,6 @@
         <input type="password" name="password" id="password">
         <input type="submit" value="login">
     </form>
+    <p>If you don't have an account signup <a href="signup.html">here</a></p>
 </body>
 </html>

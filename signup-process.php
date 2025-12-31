@@ -23,8 +23,10 @@ if($rows > 0){
     exit;
 }
 elseif($pgsql->errorCode() == 23505){
-     echo "Given email address already taken";
+     echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+     <p>Given email address already taken</p>';
 }
 else{
-    echo "Something is wrong. Try again later";
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+     <p>Something is wrong. Try again later</p>';
 }

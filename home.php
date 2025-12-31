@@ -31,7 +31,7 @@ else{
 <body>
     <img style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid black; object-fit: cover;">
     <input type="file" accept="image/*">
-    <button onclick="upload()">change my avatar</button>
+    <button>change my avatar</button>
     <h1>Welcome to home!</h1>
     <h3>Hello <?= $user["name"] ?></h3>
     <p>You are logged in</p>
