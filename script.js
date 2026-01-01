@@ -8,5 +8,11 @@ file.addEventListener("change", (event) =>{
 btn.addEventListener("click", () => {
     const fData = new FormData();
     fData.append("image", file.files[0]);
-    fetch("upload.php", { method: "POST", body: fData}).then(res => res.text()).then(data => console.log(data));
+    fetch("upload.php", { method: "POST", body: fData}).then(response => response.text()).then(data =>{
+        if(data.success){
+        document.getElementById("result").innerText = "file uploaded succcessfully";
+        }else{
+            document.getElementById("result").innerText = "file upload Failed";
+        }
+    });
 });
