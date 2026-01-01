@@ -1,0 +1,268 @@
+[database]
+host = localhost
+port = 5432
+db_name = "users"
+db_user = "postgres"
+db_pass = "password"<?php
+session_start();
+if(isset($_SESSION['user_id'])){
+    $pgsql = require __DIR__."/db.php";
+    $query = "SELECT * FROM user_details  WHERE id = {$_SESSION['user_id']}";
+    $result = $pgsql->query($query)->fetchAll();
+    $user = $result[0];
+    if(!isset($user)){
+        echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        <p>User does not exist!</p>
+        <p>If you have an account. Login <a href="login.php">here.</a></p>
+        <p>If you do not have account Signup <a href="signup.html">here.</a></p>';
+        exit;
+    }
+}
+else{
+        echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+        <p>User does not exist!</p>
+        <p>If you have an account. Login <a href="login.php">here.</a></p>
+        <p>If you do not have account Signup <a href="signup.html">here.</a></p>';
+        exit;
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Home Page</title>
+</head>
+<body>
+    <img src="<?= $user['profile_pic_path'] ?>" style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid black; object-fit: cover;" alt="profile pic">
+    <input type="file" accept="image/*">
+    <button>change my avatar</button>
+    <p id="result"></p>
+    <h1>Welcome to home!</h1>
+    <h3>Hello <?= $user["name"] ?></h3>
+    <p>You are logged in</p>
+    <p>You can Logout <a href="logout.php">here</a>
+    <script src="script.js"></script>
+</body>
+</html>
+<?php
+    declare(strict_types=1);
+    if($_SERVER['REQUEST_METHOD'] == "POST"){
+        $mail = $_POST['email'];
+        $password = hash("md5", $_POST['password']);
+        $psql = require __DIR__."/db.php";
+        $query = "SELECT * FROM user_details WHERE email='$mail' and password='$password'";
+        $result = $psql->query($query)->fetchAll();
+        $user = $result['0'];
+        if($user){
+            session_start();
+            $_SESSION['user_id'] = $user['id'];
+            if($_SESSION['user_id'] != 0){
+                header("Location: home.php");
+                exit;
+            }
+            else{
+                header("Location: login-failure.html");
+                exit;
+            }
+        }
+        else{
+                header("Location: login-failure.html");
+                exit;
+        }
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Login</title>
+</head>
+<body>
+    <h1>AuthLite</h1>
+    <h3>Login</h3>
+    <form method="post">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password">
+        <input type="submit" value="login">
+    </form>
+    <p>If you don't have an account signup <a href="signup.html">here</a></p>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Create an Account</title>
+</head>
+<body>
+    <h1>AuthLite</h1>
+    <h3>Create Your Account</h3>
+    <form method="post" action="signup-process.php">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="mail">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="pass">
+        <label for="retype-password">Re-Enter Password:</label>
+        <input type="password" id="retype-password" name="re-pass">
+        <input type="submit" value="Create Account">
+    </form>
+    <p>If you already have an account login <a href="login.php">here</a></p>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Signup</title>
+</head>
+<body>
+    <h1>Signup</h1>
+    <p>Signup Successfull</p>
+    <p>You can now <a href="login.php">Login.</a></p>
+</body>
+</html><?php
+declare(strict_types=1);
+$path = __DIR__."/config.ini";
+if(file_exists($path)){
+    $config = parse_ini_file($path, true);
+    $host = $config['database']['host'];
+    $port = $config['database']['port'];
+    $name = $config['database']['db_name'];
+    $user = $config['database']['db_user'];
+    $pass = $config['database']['db_pass'];
+
+    $dsn = "pgsql:host=$host;port=$port;dbname=$name";
+    $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+    if($pdo){
+        return $pdo;
+    }
+    else{
+        echo $pdo->errorInfo();
+        echo $pdo->errorCode();
+    }
+}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Failed</title>
+</head>
+<body>
+    <p>User doesn't exist!</p>
+    <p>Login <a href='login.php'>here.</a></p>
+    <p>If you don't have account Signup <a href='signup.html'>here.</a></p>
+</body>
+</html><?php
+declare(strict_types=1);
+session_start();
+session_destroy();
+echo '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <title>Logout</title>
+</head>
+<body>
+    <p>You are logged out</p>
+    <p>Login <a href="login.php">here.</a></p>
+    <p>If you do not have account Signup <a href="signup.html">here.</a></p>
+</body>
+</html>';
+
+?>const image = document.querySelector("img");
+const file = document.querySelector("input");
+const btn = document.querySelector("button");
+
+file.addEventListener("change", (event) =>{
+    image.src = URL.createObjectURL(event.target.files[0]);
+})
+btn.addEventListener("click", () => {
+    const fData = new FormData();
+    fData.append("image", file.files[0]);
+    console.log(file.files[0]);
+    fetch("upload.php", { method: "POST", body: fData}).then(response => response.text()).then(data =>{
+        data = JSON.parse(data);
+        if(data.success){
+            document.getElementById("result").innerText = "Avatar changed successfully";
+        }
+        else{
+            document.getElementById("result").innerText = "Avatar can't changed. Problem occured";
+        }
+    });
+});<?php
+declare(strict_types=1);
+if(empty($_POST['username'])){
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Username is required';
+    exit;
+}
+if(!filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)){
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Invalid email address';
+    exit;
+}
+if(strlen($_POST['pass']) < 8){
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Password must have 8 characeters';
+    exit;
+}
+if($_POST['pass'] !== $_POST['re-pass']){
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Correctly type your password on both fields';
+    exit;
+}
+$username = $_POST['username'];
+$email = $_POST['mail'];
+$password = hash("md5", $_POST['re-pass']);
+$pgsql = require __DIR__."/db.php";
+$query = "INSERT INTO user_details values('$username', '$email', '$password')";
+$rows = $pgsql->exec($query);
+if($rows > 0){
+    header("Location: signup-success.html");
+    exit;
+}
+elseif($pgsql->errorCode() == 23505){
+     echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+     <p>Given email address already taken</p>';
+}
+else{
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+     <p>Something is wrong. Try again later</p>';
+}<?php
+session_start();
+$name = $_FILES['image']['name']; 
+$tmp = $_FILES['image']['tmp_name'];
+$fPath = "uploads/".$name;
+if(move_uploaded_file($tmp, $fPath)){
+    $conn = require __DIR__."/db.php";
+    $query = "SELECT * FROM user_details  WHERE id = {$_SESSION['user_id']}";
+    $result = $conn->query($query)->fetchAll();
+    $id = $result[0]['id'];
+    $query = "UPDATE user_details SET profile_pic_path='$fPath' WHERE id='$id'";
+    $rows = $conn->exec($query);
+    if($rows > 0){
+        echo json_encode([
+            "success"=> true,
+            "path"=> $fPath
+        ]);
+    }
+    else{
+    http_response_code(500);
+    echo json_encode([
+        "success"=> false
+    ]);
+}
+}
+else{
+    http_response_code(500);
+    echo json_encode([
+        "success"=> false
+    ]);
+}

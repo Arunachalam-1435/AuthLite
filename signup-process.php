@@ -1,16 +1,24 @@
 <?php
 declare(strict_types=1);
 if(empty($_POST['username'])){
-    die("Username is required");
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Username is required';
+    exit;
 }
 if(!filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)){
-    die("Invalid Email address");
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Invalid email address';
+    exit;
 }
 if(strlen($_POST['pass']) < 8){
-    die("Password must have 8 characters");
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Password must have 8 characeters';
+    exit;
 }
 if($_POST['pass'] !== $_POST['re-pass']){
-    die("Correctly type your password on both fields");
+    echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    Correctly type your password on both fields';
+    exit;
 }
 $username = $_POST['username'];
 $email = $_POST['mail'];

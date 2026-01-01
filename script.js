@@ -8,11 +8,14 @@ file.addEventListener("change", (event) =>{
 btn.addEventListener("click", () => {
     const fData = new FormData();
     fData.append("image", file.files[0]);
+    console.log(file.files[0]);
     fetch("upload.php", { method: "POST", body: fData}).then(response => response.text()).then(data =>{
+        data = JSON.parse(data);
         if(data.success){
-        document.getElementById("result").innerText = "file uploaded succcessfully";
-        }else{
-            document.getElementById("result").innerText = "file upload Failed";
+            document.getElementById("result").innerText = "Avatar changed successfully";
+        }
+        else{
+            document.getElementById("result").innerText = "Avatar can't changed. Problem occured";
         }
     });
 });
